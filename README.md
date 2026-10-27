@@ -22,3 +22,10 @@ The library exists to do one conversion with no surprises and no dependencies. T
 ## The edge you will hit
 
 The standard and decimal grids are incommensurate at millisecond resolution: 86 400 does not divide 100 000. Whole-second inputs round-trip exactly, but a millisecond-precision input may drift by up to one SI second when converted to decimal and back. `DecimalTime.millis` carries the sub-second remainder forward so the value you put in is never silently truncated, only quantised by the grid ratio when you convert back.
+
+## Design notes
+
+The window stores values eagerly rather than keeping running aggregates. Running
+sums drift with floating point over long streams, and recomputing from a small
+buffer is cheap enough that the drift is not worth the speed.
+
